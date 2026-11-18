@@ -51,11 +51,26 @@ The drummer's feet are busy on kick/hi-hat. Options to decide with the human:
 - Test with a power bank before committing to a Li-ion build.
 - WiFi must be on the same `192.168.1.0/24` network as the **show MacBook** (the machine running
   Ableton + AbleSet + Videosync). `ABLESET_IP` in each unit's config must be that Mac's IP.
-- The ZTE H196A already has DHCP reservations for several Macs (`.5`, `.6`, `.7`, `.52`). Either:
-  - **recommended:** dedicate one reservation to the "show Mac" role and always use that Mac for the
-    rig, so no ESP32 config ever changes; or
-  - if the M1 Air and M2 Pro swap, give each its own reservation and update `ABLESET_IP` (or resolve
-    `show-mac.local` via mDNS) before the show.
-- DHCP reservation for each ESP32 is also strongly recommended so they are easy to identify on the
-  network.
+- **DHCP reservation is keyed by MAC address — one per network interface.** Both show Macs are
+  connected by **WiFi and Ethernet at the same time**, so each has *two* MACs and can receive *two*
+  different reserved IPs on the same subnet. That is ambiguous: a device sending to the wrong one
+  reaches nothing. Pick **one interface as the show interface** (Ethernet is more reliable for a
+  live rig), reserve **that interface's MAC**, and keep the other interface off the show network (or
+  at least know which IP AbleSet actually answers on). Verify from the Mac with `ifconfig` / Network
+  Settings which MAC ↔ IP pair is the reserved one.
+- If the M1 Air and M2 Pro swap show duty, either:
+  - dedicate a single "show Mac" role by always using the same machine + its reserved IP (simplest),
+    or
+  - keep both reservations and update `ABLESET_IP` (or resolve `show-mac.local` via mDNS) before the
+    show.
+- **ESP32 devices: yes, a MAC/IP reservation per unit solves the addressing problem.** Each ESP32
+  has a unique WiFi STA MAC; reserve one IP per foot switch (e.g. `.10` guitar, `.11` bass, ...).
+  Then each unit is stable and identifiable. Optionally also give it an mDNS name such as
+  `alt-guitar.local` in the firmware. Note the reservation must use the MAC the ESP32 actually
+  presents (it is burned in unless the firmware overrides it).
+- **Still unverified:** that AbleSet accepts a *remote* OSC command on UDP 39051 from another device.
+  The documented `/subscribe` examples all use the local web UI. Test this early — see
+  [ABLESET-CONTROL.md](ABLESET-CONTROL.md#what-must-be-verified-before-committing-to-this-design).
+  If AbleSet only listens locally, use the fallback: devices send their OSC **directly to the WING**
+  (the same packets the current phone canvases send), which needs no AbleSet inbound at all.
 - Keep a phone with the canvases charged — hardware is a convenience, not the only path.

@@ -51,10 +51,15 @@ foot switch always agree, because AbleSet owns the state.
 
 ## What must be verified before committing to this design
 
-1. **Inbound custom OSC on AbleSet.** Confirm a device UDP packet to `192.168.1.x:39051` with an
-   arbitrary address such as `/alt/guitar/toggle` actually reaches the Project Script's
-   `onOscChange()` handler. The existing script proves `onOscChange("/global/isPlaying", ...)` works
-   for AbleSet's own addresses; an external custom address is the untested part.
+1. **Inbound custom OSC on AbleSet — the critical unknown.** Confirm a device UDP packet to the
+   **show Mac's reserved IP:39051** with an arbitrary address such as `/alt/guitar/toggle` actually
+   reaches the Project Script's `onOscChange()` handler. Two separate things are untested:
+   - `onOscChange()` for a *custom* address (the existing script only proves `/global/isPlaying`).
+   - AbleSet listening on a **remote** interface at all — the documented `/subscribe` examples all
+     go through the local `http://127.0.0.1/settings/osc` tester, which does not prove network input.
+
+   Test this first, before building five switches. If it fails, use the fallback below (direct to
+   WING) — it is already proven by the existing phone canvases and needs no AbleSet inbound.
 2. **`setShared()` from the script updates the canvas label.** The canvases read
    `osc("/shared/altGuitar")` for their status text, so this should work, but verify.
 3. **No double-send.** The existing phone canvases already send WING OSC directly AND set the shared
