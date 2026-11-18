@@ -5,11 +5,15 @@
 #define WIFI_SSID      "SHOW_NETWORK"
 #define WIFI_PASS      "CHANGE_ME"
 
-// Show machine running AbleSet (its inbound OSC port is 39051).
-#define ABLESET_IP     "192.168.1.2"
-#define ABLESET_PORT   39051
+// WING console - the canvas-proven direct path (no AbleSet inbound needed).
+#define WING_IP        "192.168.1.3"
+#define WING_PORT      2223
+#define LOCAL_PORT     42123   // UDP port the WING sends GET replies to
 
-// guitar | bass | flute | vocals | drums
+// WING channel for this unit: guitar=1, bass=9, flute=10, vocals=12(...), drums=TBD
+#define WING_CHANNEL   1
+
+// guitar | bass | flute | vocals | drums (used for logs/display only)
 #define UNIT_NAME      "guitar"
 
 #define BUTTON_PIN     4      // switch between GPIO and GND, INPUT_PULLUP

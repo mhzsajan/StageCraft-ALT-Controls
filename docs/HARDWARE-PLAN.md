@@ -29,8 +29,9 @@ committed with real WiFi credentials):
 ```cpp
 #define WIFI_SSID      "SHOW_NETWORK"
 #define WIFI_PASS      "..."
-#define ABLESET_IP     "192.168.1.x"   // the show machine running AbleSet
-#define ABLESET_PORT   39051
+#define WING_IP        "192.168.1.3"   // direct-to-WING path (phone-canvas proven)
+#define WING_PORT      2223
+#define WING_CHANNEL   1               // guitar=1, bass=9, flute=10, vocals=12, drums=TBD
 #define UNIT_NAME      "guitar"        // guitar | bass | flute | vocals | drums
 #define BUTTON_PIN     4
 ```
@@ -49,8 +50,9 @@ The drummer's feet are busy on kick/hi-hat. Options to decide with the human:
 ## Power / reliability notes
 
 - Test with a power bank before committing to a Li-ion build.
-- WiFi must be on the same `192.168.1.0/24` network as the **show MacBook** (the machine running
-  Ableton + AbleSet + Videosync). `ABLESET_IP` in each unit's config must be that Mac's IP.
+- WiFi must be on the same `192.168.1.0/24` network as the **WING** (`192.168.1.3`) — that is the
+  only address the toggle path needs. The show Macs can be on the same network, but they are not in
+  the toggle path on this design.
 - **DHCP reservation is keyed by MAC address — one per network interface.** Both show Macs are
   connected by **WiFi and Ethernet at the same time**, so each has *two* MACs and can receive *two*
   different reserved IPs on the same subnet. That is ambiguous: a device sending to the wrong one

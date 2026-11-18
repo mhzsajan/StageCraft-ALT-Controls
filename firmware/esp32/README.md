@@ -1,8 +1,9 @@
 # ESP32 foot-switch firmware — PROTOTYPE (not hardware-tested)
 
-This sends one OSC message, `/alt/<UNIT_NAME>/toggle`, to AbleSet (UDP 39051) whenever the button is
-pressed. AbleSet's Project Script then flips the shared state and writes the WING OSC. See
-[docs/ABLESET-CONTROL.md](../../docs/ABLESET-CONTROL.md).
+This talks **directly to the WING**, using the exact path the AbleSet phone canvases use (proven on
+iPhone/Android in the user's live test): on each press it GETs the current
+`/ch/<WING_CHANNEL>/in/set/altsrc` value, flips it, and SETs it back with a **float** tag. No AbleSet
+inbound, no subscribe, no computer. See [docs/PROTOCOL-EVIDENCE.md](../../docs/PROTOCOL-EVIDENCE.md).
 
 **Status:** code skeleton only. Nothing has been flashed or tested on hardware. Do not take it to a
 show until you have verified: WiFi connect, one message per press, and AbleSet actually reacting.
@@ -10,11 +11,14 @@ show until you have verified: WiFi connect, one message per press, and AbleSet a
 ## Build (Arduino IDE)
 
 1. Install the ESP32 board package (Espressif `esp32`) and the Arduino `WiFi` library (ships with it).
-2. Copy `src/config.h.example` → `src/config.h` and fill in **your** WiFi credentials, the AbleSet
-   machine's IP, and the unit name. `src/config.h` is gitignored — credentials must never be committed.
+2. Copy `src/config.h.example` → `src/config.h` and fill in **your** WiFi credentials, `WING_IP`
+   (`192.168.1.3`), `WING_CHANNEL` for this member, and the unit name. `src/config.h` is gitignored —
+   credentials must never be committed.
 3. Open `src/main.cpp`, select your ESP32 board + port, upload.
-4. Watch Serial at 115200: it prints the assigned IP and each sent message.
-5. With AbleSet running, press the button and confirm the corresponding canvas status changes.
+4. Watch Serial at 115200: it prints the assigned IP and each GET/SET result.
+5. Press the button and confirm the corresponding **WING channel's altsrc** flips (read it back with
+   the WING MCP `wing_get`). The canvas status label will **not** follow a hardware switch on this
+   direct path — that is expected; see the README's comparison table.
 
 ## Behaviour
 

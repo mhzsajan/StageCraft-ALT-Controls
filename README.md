@@ -73,10 +73,17 @@ flowchart TD
 
 | Option | Pros | Cons |
 |---|---|---|
-| **B. Devices → AbleSet → WING (recommended)** | AbleSet stays the show brain; one place holds the channel map (`project-script.js`); canvas status label can follow the hardware switch; devices only need AbleSet's IP/port, not WING OSC details | Needs AbleSet running (it is) and one project-script change + AbleSet restart; must verify AbleSet fires `onOscChange` for the custom address |
-| A. ESP32 directly to WING | No computer, no app, no cloud; simplest packet | Canvas status label will not follow the switch; channel map duplicated in every device |
+| **A. ESP32 directly to WING (RECOMMENDED since 2026-11-18)** | **Proven by the user's own live test**: iPhone, Android and a second iPhone all toggled ALT from AbleSet canvases — those buttons send raw UDP OSC **from the phone straight to `192.168.1.3:2223`**, not via AbleSet. An ESP32 can send the identical packet. No AbleSet inbound, no subscribe, no computer dependency | Canvas status label will not follow a hardware switch (cosmetic); each device holds its own channel number |
+| B. Devices → AbleSet → WING (experimental) | One place holds the channel map; canvas status label can follow the switch | **Depends on an unproven capability** — see the warning in [ABLESET-CONTROL.md](docs/ABLESET-CONTROL.md). Do not build around it until tested |
 | C. AirPods + AirCursor (vocalist) | No new hardware to carry | Needs a supported AirPods model, macOS 15+, permissions, AirPods playing audio on the Mac; gesture mis-triggers possible |
 | D. BLE photo-remote / small handheld | Very cheap, no WiFi setup | Needs a Mac receiver; button mapping varies |
+
+> **Why the recommendation changed:** the earlier plan assumed devices would send OSC to AbleSet on
+> UDP 39051. The user then reported that phones toggling from AbleSet canvases works — but the canvas
+> code shows those buttons send `192.168.1.3:2223/ch/N/in/set/altsrc 0|1` **directly from the phone**.
+> That proves the direct path, not AbleSet's inbound. Evidence is in
+> [PROTOCOL-EVIDENCE.md](docs/PROTOCOL-EVIDENCE.md) and
+> `ableset-show-profile/docs/ABLESET-DIAGRAMS.md` L45/L58.
 
 ### Does this need `/subscribe`? — **No**
 
