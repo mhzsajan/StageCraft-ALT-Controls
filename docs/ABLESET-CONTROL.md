@@ -1,10 +1,11 @@
 # Option B (experimental): devices → AbleSet → WING
 
-> **Status: not recommended for the first build.** The user's own live test (2026-11-18) showed that
-> phones toggling ALT from AbleSet canvases works — but those buttons send the WING OSC **directly
-> from the phone** (`192.168.1.3:2223/ch/N/in/set/altsrc`), so the test proves the **direct-to-WING**
-> path, not this one. Option A in the README is now the recommended first build. Keep this page for
-> the possible later improvement where AbleSet also owns the state/label.
+> **Status: not recommended for the first build.** The user's live test (2026-11-18) showed that
+> phones toggling from AbleSet canvases work, but the phone is only a UI client: the **AbleSet desktop
+> app** sends the raw UDP OSC (`192.168.1.3:2223/ch/N/in/set/altsrc`) to the WING. That test proves the
+> WING side works, not that an external device can send a command *into* AbleSet on UDP 39051. Option
+> A (direct-to-WING) is therefore the recommended first build. Keep this page for a later improvement
+> where AbleSet also owns the state/label.
 
 The idea: keep **AbleSet as the show brain**. A foot switch or an AirPods gesture sends a tiny OSC
 command to AbleSet; AbleSet's Project Script does the real WING OSC and updates the canvas status

@@ -15,8 +15,10 @@ on 2026-11-18.
 | `SET -1` flips a boolean param without reading state first | `02-osc-protocol.md` "Toggle — the -1 trick". **Not yet tested on `altsrc`** — test only with operator sign-off, it is audible |
 | OSC subscribe exists (`/*b`, `/*s`, `/*S`) but dies after ~10 s inactivity unless renewed | `02-osc-protocol.md` "Subscribe". Avoid: only **one OSC subscriber** is allowed on the console (`docs/bridge.md` L13) |
 | AbleSet listens for inbound OSC on UDP **39051**; AI bridge listener is **39052**; `/subscribe` is for AI state reading only | `ableset-show-profile/docs/WHY-THESE-SETTINGS.md` L36–57 |
-| **ALT canvas buttons send raw OSC straight from the client to the WING** — `/shared/...` only updates the on-screen label | `ableset-show-profile/docs/ABLESET-DIAGRAMS.md` L45/L58; canvas `onPress` = `"/shared/altKick 0; 192.168.1.3:2223/ch/1/in/set/altsrc 0"` |
-| **User's live test (2026-11-18):** iPhone, Android and a second iPhone all opened AbleSet canvases and toggled ALT successfully — proving that a network device can send the WING OSC directly | reported by the human; consistent with the canvas code above |
+| **ALT canvas buttons contain a raw OSC target** `192.168.1.3:2223/ch/N/in/set/altsrc` — `/shared/...` only updates the on-screen label | `ableset-show-profile/docs/ABLESET-DIAGRAMS.md` L40/L45/L58; canvas `onPress` = `"/shared/altKick 0; 192.168.1.3:2223/ch/1/in/set/altsrc 0"` |
+| **The phone is only the UI client.** A browser cannot send UDP; the **AbleSet desktop app** on the show Mac sends the raw OSC to the WING | browser networking limitation + `ABLESET-DIAGRAMS.md` L40: *"sent as raw OSC straight from AbleSet to the WING"* |
+| **User's live test (2026-11-18):** iPhone, Android and a second iPhone all toggled ALT from AbleSet canvases — proves the canvases work across phones and the WING accepts OSC generated on the network (sent by AbleSet desktop) | reported by the human |
+| **WING MCP on this PC also successfully sent OSC to the WING** (read-only `wing_get` returned values), proving an ordinary network device can talk OSC to the console | live tool call on 2026-11-18 |
 | **Not proven:** a *remote* device sending an arbitrary OSC command into AbleSet on UDP 39051 and having `onOscChange()` react | all documented `/subscribe` examples use the local `http://127.0.0.1/settings/osc` tester |
 
 ## Consequence for this project

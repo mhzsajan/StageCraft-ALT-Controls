@@ -73,17 +73,19 @@ flowchart TD
 
 | Option | Pros | Cons |
 |---|---|---|
-| **A. ESP32 directly to WING (RECOMMENDED since 2026-11-18)** | **Proven by the user's own live test**: iPhone, Android and a second iPhone all toggled ALT from AbleSet canvases — those buttons send raw UDP OSC **from the phone straight to `192.168.1.3:2223`**, not via AbleSet. An ESP32 can send the identical packet. No AbleSet inbound, no subscribe, no computer dependency | Canvas status label will not follow a hardware switch (cosmetic); each device holds its own channel number |
+| **A. ESP32 directly to WING (RECOMMENDED)** | The user's live test (iPhone, Android, second iPhone) proves the canvases work across phones and that the WING accepts OSC generated on the network. The WING MCP also successfully sends OSC from this PC. A phone browser cannot send UDP itself — the AbleSet desktop app relays the packet — but the WING side is proven, and an ESP32 can send the same UDP packet directly. No AbleSet inbound, no subscribe, no computer dependency | Canvas status label will not follow a hardware switch (cosmetic); each device holds its own channel number. An ESP32 device sending directly has not itself been bench-tested yet |
 | B. Devices → AbleSet → WING (experimental) | One place holds the channel map; canvas status label can follow the switch | **Depends on an unproven capability** — see the warning in [ABLESET-CONTROL.md](docs/ABLESET-CONTROL.md). Do not build around it until tested |
 | C. AirPods + AirCursor (vocalist) | No new hardware to carry | Needs a supported AirPods model, macOS 15+, permissions, AirPods playing audio on the Mac; gesture mis-triggers possible |
 | D. BLE photo-remote / small handheld | Very cheap, no WiFi setup | Needs a Mac receiver; button mapping varies |
 
-> **Why the recommendation changed:** the earlier plan assumed devices would send OSC to AbleSet on
-> UDP 39051. The user then reported that phones toggling from AbleSet canvases works — but the canvas
-> code shows those buttons send `192.168.1.3:2223/ch/N/in/set/altsrc 0|1` **directly from the phone**.
-> That proves the direct path, not AbleSet's inbound. Evidence is in
+> **Why the recommendation is direct-to-WING:** the earlier plan assumed devices would send OSC into
+> AbleSet on UDP 39051 — still unverified. The canvas `onPress` contains a raw target
+> `192.168.1.3:2223/ch/N/in/set/altsrc 0|1`; the phone is only the UI client, and the **AbleSet desktop
+> app** sends that UDP OSC to the WING (a browser cannot send UDP). The user's phone test proves the
+> WING accepts network OSC, and the WING MCP does the same from this PC — so an ESP32 sending the
+> identical packet is the lowest-risk path. Evidence:
 > [PROTOCOL-EVIDENCE.md](docs/PROTOCOL-EVIDENCE.md) and
-> `ableset-show-profile/docs/ABLESET-DIAGRAMS.md` L45/L58.
+> `ableset-show-profile/docs/ABLESET-DIAGRAMS.md` L40/L45/L58.
 
 ### Does this need `/subscribe`? — **No**
 

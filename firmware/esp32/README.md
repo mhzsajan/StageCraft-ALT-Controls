@@ -1,7 +1,9 @@
 # ESP32 foot-switch firmware — PROTOTYPE (not hardware-tested)
 
-This talks **directly to the WING**, using the exact path the AbleSet phone canvases use (proven on
-iPhone/Android in the user's live test): on each press it GETs the current
+This talks **directly to the WING**, using the same OSC target the AbleSet canvases trigger (the
+user verified those canvases work from iPhone/Android; in that case the AbleSet desktop app sends the
+UDP packet, whereas here the ESP32 sends it itself). The WING also accepted network OSC from the WING
+MCP on this PC. On each press it GETs the current
 `/ch/<WING_CHANNEL>/in/set/altsrc` value, flips it, and SETs it back with a **float** tag. No AbleSet
 inbound, no subscribe, no computer. See [docs/PROTOCOL-EVIDENCE.md](../../docs/PROTOCOL-EVIDENCE.md).
 
