@@ -60,11 +60,11 @@ The drummer's feet are busy on kick/hi-hat. Options to decide with the human:
   live rig), reserve **that interface's MAC**, and keep the other interface off the show network (or
   at least know which IP AbleSet actually answers on). Verify from the Mac with `ifconfig` / Network
   Settings which MAC ↔ IP pair is the reserved one.
-- If the M1 Air and M2 Pro swap show duty, either:
-  - dedicate a single "show Mac" role by always using the same machine + its reserved IP (simplest),
-    or
-  - keep both reservations and update `ABLESET_IP` (or resolve `show-mac.local` via mDNS) before the
-    show.
+- If the M1 Air and M2 Pro swap show duty, it does **not** affect the recommended direct-to-WING
+  toggle path — the ESP32s only care about `WING_IP` (`192.168.1.3`). It matters only for the
+  experimental Option B and for AirPods/AirCursor (which must run on the show Mac). If you use B,
+  either dedicate one "show Mac" role with a fixed reserved IP, or keep both reservations and update
+  `ABLESET_IP` (or resolve `show-mac.local` via mDNS) before the show.
 - **ESP32 devices: yes, a MAC/IP reservation per unit solves the addressing problem.** Each ESP32
   has a unique WiFi STA MAC; reserve one IP per foot switch (e.g. `.10` guitar, `.11` bass, ...).
   Then each unit is stable and identifiable. Optionally also give it an mDNS name such as
