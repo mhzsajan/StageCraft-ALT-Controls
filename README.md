@@ -9,6 +9,33 @@ a convenience layer that sends the **same OSC** — the phone canvases stay as t
 
 > No AI, internet or MCP is needed at show time. Everything here is local OSC on the show network.
 
+## Show topology (confirmed 2026-11-18)
+
+The rig uses **one show MacBook** — either the M1 Air or the M2 Pro, chosen per show — and on that
+**same machine** Ableton, AbleSet and Videosync 2 all run together for the live backing tracks.
+
+```mermaid
+flowchart LR
+    subgraph mac["SHOW MAC (M1 Air or M2 Pro)"]
+        AB[Ableton] --- AS[AbleSet :39051]
+        AB --- VS[Videosync 2]
+        ABP[AbleBridgePlus listener :9883]
+    end
+    ESP[ESP32 foot switches] -->|UDP /alt/.../toggle| AS
+    AIR[AirPods Pro → AirCursor + hotkey listener] -->|same Mac: OSC| AS
+    AS -->|WING OSC| W[WING 192.168.1.3:2223]
+```
+
+Good consequences:
+
+- The AUDIO-PROFILES canvas uses `127.0.0.1:9883` — with Ableton and AbleSet on the same Mac this
+  works naturally. It must be opened in **AbleSet on the show Mac**, not on a band member's phone.
+- The ALT toggle OSC goes to AbleSet on that Mac (UDP 39051), so ESP32 devices only need that Mac's
+  IP, which must be stable (DHCP reservation — see [HARDWARE-PLAN.md](docs/HARDWARE-PLAN.md)).
+- AirCursor and the hotkey listener for the vocalist's AirPods run on that **same** show Mac, so the
+  OSC hop is local. Watch for "Now Playing" conflicts with Ableton/Videosync — see
+  [AIRPODS.md](docs/AIRPODS.md).
+
 ## The one fact that makes this simple
 
 The WING already exposes the ALT switch as a normal OSC parameter:
@@ -77,6 +104,10 @@ sends the WING OSC. No AI, no MCP, no subscription. See
 2. Drummer: foot switch or hand button? (Feet already on kick/hi-hat.)
 3. Should the canvas status label follow the hardware switch? That decides Option A vs B.
 4. Display content: `MAIN` / `ALT`, WiFi status, battery — how much is useful on a dark stage?
+5. ~~Which Mac runs the rig?~~ **Answered:** one show Mac (M1 Air or M2 Pro per show) runs Ableton +
+   AbleSet + Videosync together. **Still to decide:** do the two Macs swap, or is one always the show
+   Mac? If they swap, we should reserve one DHCP IP for the "show Mac" role (or use mDNS) so the
+   ESP32 config does not have to change between shows.
 
 ## Related
 

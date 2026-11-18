@@ -49,6 +49,13 @@ The drummer's feet are busy on kick/hi-hat. Options to decide with the human:
 ## Power / reliability notes
 
 - Test with a power bank before committing to a Li-ion build.
-- WiFi must be on the same `192.168.1.0/24` network as AbleSet; DHCP reservation for each ESP32 is
-  strongly recommended (the router is the ZTE H196A used by the rest of the rig).
+- WiFi must be on the same `192.168.1.0/24` network as the **show MacBook** (the machine running
+  Ableton + AbleSet + Videosync). `ABLESET_IP` in each unit's config must be that Mac's IP.
+- The ZTE H196A already has DHCP reservations for several Macs (`.5`, `.6`, `.7`, `.52`). Either:
+  - **recommended:** dedicate one reservation to the "show Mac" role and always use that Mac for the
+    rig, so no ESP32 config ever changes; or
+  - if the M1 Air and M2 Pro swap, give each its own reservation and update `ABLESET_IP` (or resolve
+    `show-mac.local` via mDNS) before the show.
+- DHCP reservation for each ESP32 is also strongly recommended so they are easy to identify on the
+  network.
 - Keep a phone with the canvases charged — hardware is a convenience, not the only path.

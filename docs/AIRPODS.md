@@ -61,8 +61,12 @@ listener that runs the prototype sender in [`mac/`](../mac/README.md).
   with the actual show apps open.
 - **Permissions:** Accessibility is needed for AirCursor and for the hotkey listener; after an
   AirCursor update macOS may require toggling it off/on again.
-- **Two Macs:** the vocalist's Mac must be the one with AirCursor + listener + network access to
-  AbleSet. Decide whether the vocalist uses the M1 Air or the M2 Pro.
+- **Single show Mac (confirmed):** Ableton + AbleSet + Videosync all run on the same MacBook, so
+  AirCursor and the hotkey listener must run on that machine too. The vocalist's AirPods should be
+  paired to it. Test the chain with Ableton and Videosync actually open: whichever app owns macOS's
+  "Now Playing" can steal the stem press. AirCursor claims the role while tracking, but this rig has
+  more audio apps than a plain desktop, so a rehearsal test is mandatory. If the M1 Air and M2 Pro
+  swap show duty, install/configure AirCursor + listener on both.
 
 ## Risks — decide before relying on it at a show
 
