@@ -19,9 +19,14 @@ Units: `guitar`, `bass`, `flute`, `vocals`, `drums`.
 
 ## Suggested integration with AirCursor
 
-1. In AirCursor, assign a **deliberate** gesture (recommended: stem double-press) to a hotkey such
-   as `⌃⌥⌘V`. Avoid `nod` — the vocalist nods to music constantly.
-2. Bind that hotkey in a global listener to `python3 .../send_alt_toggle.py vocals`.
-3. Rehearse once: pressing the gesture must toggle the WING channel and the canvas status label.
+1. In AirCursor, set trigger **"Press stem twice" (`stemDouble`)** → action **"Back (⌘[)"**.
+   AirCursor has no arbitrary-custom-hotkey action; Back/Forward are fixed actions that emit real
+   ⌘[ / ⌘] key events, which a listener can catch. Avoid `nod` (the vocalist nods to music constantly)
+   and single press (play/pause).
+2. In a global listener such as **Hammerspoon**, bind ⌘[ to run
+   `python3 .../send_alt_toggle.py vocals`. AirCursor captures the stem press via macOS's
+   `MPRemoteCommandCenter` — see [docs/AIRPODS.md](../docs/AIRPODS.md) for the source evidence.
+3. Rehearse once: double-pressing the AirPods stem must toggle the WING channel and the canvas
+   status label, with the show apps open (to catch any "Now Playing" conflict).
 
 See [docs/AIRPODS.md](../docs/AIRPODS.md) for the AirPods model/permission requirements and risks.

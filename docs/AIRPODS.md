@@ -4,6 +4,10 @@ The vocalist already has AirPods. [AirCursor](https://github.com/m-afham/AirCurs
 menu-bar app that reads the AirPods' head-motion sensors and turns gestures into mouse clicks and
 keyboard actions. It is a plausible way to trigger an ALT toggle without carrying another button.
 
+**Confirmed rig (2026-11-18):** the vocalist has **AirPods Pro**, and the show has an **M1 Air** and
+an **M2 Pro** with current macOS. All AirCursor requirements are therefore met. The question is no
+longer "will it run" but "will a stem press reliably reach the show Mac and not a music app".
+
 ## What AirCursor actually requires (from its README, checked 2026-11-18)
 
 - **macOS 15 Sequoia or later.**
@@ -15,19 +19,50 @@ keyboard actions. It is a plausible way to trigger an ALT toggle without carryin
 - Gestures available: stem press 1×/2×/3×, nod, shake, tilt; hover-click; remappable actions
   include clicks and shortcut-type actions. It can synthesize keyboard events (`CGEvent`).
 
-## How it would connect to the show
+## Stem click mapping — verified from AirCursor source (2026-11-18)
+
+The earlier uncertainty is resolved. AirCursor's `StemControlService.swift` registers with macOS's
+`MPRemoteCommandCenter` and captures **stem presses directly** (no head motion needed):
+
+| AirPods action | Media command AirCursor captures | Trigger |
+|---|---|---|
+| Press stem once | play / pause / togglePlayPause | `stemSingle` |
+| Press stem **twice** | **next track** | `stemDouble` |
+| Press stem three times | previous track | `stemTriple` |
+
+AirCursor claims the "Now Playing" role while active (`AudioKeepAlive` keeps it genuinely playing),
+which is how it receives those commands instead of a music app.
+
+`Actions.swift` shows the remappable actions. There is **no arbitrary "custom hotkey" action**, but
+there are fixed actions that emit real keyboard events: `back` = **⌘[**, `forward` = **⌘]**, plus
+Mission Control / Spaces / screenshot. A free global listener (e.g. **Hammerspoon**) can catch ⌘[ and
+run our sender — so the chain works without modifying AirCursor:
 
 ```mermaid
 flowchart LR
-    AP[AirPods motion] --> AC[AirCursor on Mac]
-    AC -->|gesture → hotkey| HK[Small local listener]
-    HK -->|UDP OSC /alt/vocals/toggle :39051| AS[AbleSet project script]
+    AP[AirPods Pro stem DOUBLE press] --> AC[AirCursor: stemDouble → Back (⌘[ )]
+    AC -->|⌘[| HK[Hammerspoon global listener]
+    HK -->|executes| PY[mac/send_alt_toggle.py vocals]
+    PY -->|UDP OSC /alt/vocals/toggle :39051| AS[AbleSet project script]
     AS --> W[WING channels 12/15/16]
 ```
 
-AirCursor itself does **not** send OSC. The missing piece is a tiny local listener that catches a
-chosen hotkey and sends the same `/alt/vocals/toggle` message as an ESP32. A prototype sender lives
-in [`mac/`](../mac/README.md).
+**Recommended binding:** `stemDouble → Back (⌘[)`. It is deliberate (a vocalist never double-presses
+by accident while singing), and ⌘[ is unlikely to be used elsewhere on the show Mac. Avoid `nod` and
+avoid single press (play/pause) for the same reason.
+
+AirCursor itself does **not** send OSC. The missing pieces are the hotkey choice above and a small
+listener that runs the prototype sender in [`mac/`](../mac/README.md).
+
+### Remaining risks
+
+- **Now Playing conflict:** if another app (music player, even a browser tab) owns Now Playing on
+  that Mac, stem presses may go there instead. AirCursor claims the role while tracking, but test it
+  with the actual show apps open.
+- **Permissions:** Accessibility is needed for AirCursor and for the hotkey listener; after an
+  AirCursor update macOS may require toggling it off/on again.
+- **Two Macs:** the vocalist's Mac must be the one with AirCursor + listener + network access to
+  AbleSet. Decide whether the vocalist uses the M1 Air or the M2 Pro.
 
 ## Risks — decide before relying on it at a show
 

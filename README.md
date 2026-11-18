@@ -71,8 +71,9 @@ sends the WING OSC. No AI, no MCP, no subscription. See
 
 ## Questions for the human before building
 
-1. Which **AirPods model** does the vocalist have? AirCursor needs AirPods Pro, AirPods Max,
-   AirPods 3rd gen+, or Beats Fit Pro (head-motion sensors).
+1. ~~Which AirPods model?~~ **Answered: AirPods Pro**, with M1 Air + M2 Pro on current macOS —
+   AirCursor requirements are met. Stem-double-press mapping is documented in
+   [docs/AIRPODS.md](docs/AIRPODS.md); still needs a live rehearsal test.
 2. Drummer: foot switch or hand button? (Feet already on kick/hi-hat.)
 3. Should the canvas status label follow the hardware switch? That decides Option A vs B.
 4. Display content: `MAIN` / `ALT`, WiFi status, battery — how much is useful on a dark stage?
