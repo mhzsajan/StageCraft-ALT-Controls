@@ -1,0 +1,11 @@
+# Credentials / per-unit config — never commit
+firmware/esp32/src/config.h
+.env
+*.secret
+
+# Build artefacts
+**/.pio/
+**/build/
+__pycache__/
+*.pyc
+.DS_Store

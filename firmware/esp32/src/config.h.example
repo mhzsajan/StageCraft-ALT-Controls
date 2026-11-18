@@ -1,0 +1,22 @@
+// Copy to config.h and fill in. config.h is gitignored — never commit credentials.
+#ifndef ALT_CONTROL_CONFIG_H
+#define ALT_CONTROL_CONFIG_H
+
+#define WIFI_SSID      "SHOW_NETWORK"
+#define WIFI_PASS      "CHANGE_ME"
+
+// Show machine running AbleSet (its inbound OSC port is 39051).
+#define ABLESET_IP     "192.168.1.2"
+#define ABLESET_PORT   39051
+
+// guitar | bass | flute | vocals | drums
+#define UNIT_NAME      "guitar"
+
+#define BUTTON_PIN     4      // switch between GPIO and GND, INPUT_PULLUP
+#define LED_PIN        2      // onboard LED on many ESP32 boards; -1 to disable
+#define DEBOUNCE_MS    50
+
+// Uncomment for an SSD1306 128x64 OLED on I2C (requires Adafruit_SSD1306 + Adafruit_GFX).
+// #define USE_DISPLAY
+
+#endif
