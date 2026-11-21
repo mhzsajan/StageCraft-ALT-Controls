@@ -1,4 +1,13 @@
-# StageCraft ALT Controls
+# MOVED / ARCHIVED - StageCraft ALT Controls
+
+**This repo is archived as of 2026-11-21.** Its content was merged into
+[ableset-show-profile/alt-controls](https://github.com/mhzsajan/ableset-show-profile/tree/master/alt-controls)
+and updated there for the current hardware (12 V relay remote -> phono jack -> ESP32 GPIO -> raw WING
+OSC). Go to that folder for all current documentation. This repo is kept read-only for history only.
+
+---
+
+# StageCraft ALT Controls (historical)
 
 Foot switches, handheld buttons and AirPods gestures for the StageCraft show's **ALT toggles**
 (live mic ↔ pre-recorded backing on the WING desk).
